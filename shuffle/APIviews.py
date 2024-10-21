@@ -126,23 +126,30 @@ class RingtoneView(APIView):
                 user = models.CustomUser.objects.get(id=user_id)
             except models.CustomUser.DoesNotExist:
                 return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
             ringtone_language = user.ringtone_language
             user_dob_year = user.user_dob.year if user.user_dob else None
             is_all = user.is_all
             state = user.state
             city = user.city
+
             ringtone_queryset = models.Ringtone.objects.filter(status=1)
             if ringtone_language:
                 ringtone_queryset = ringtone_queryset.filter(ringtone_language=ringtone_language)
+            
             if user_dob_year:
-                ringtone_queryset = ringtone_queryset.filter(ringtone_year=user_dob_year)
+                # Fetch ringtones where user_dob_year is between ringtone_year_start and ringtone_year_end
+                ringtone_queryset = ringtone_queryset.filter( ringtone_year_start__lte=user_dob_year, ringtone_year_end__gte=user_dob_year )
+
             if is_hyped:
                 ringtone_queryset = ringtone_queryset.filter(is_hyped=True)
+
             if not is_all:
                 if state:
                     ringtone_queryset = ringtone_queryset.filter(state=state)
                 if city:
                     ringtone_queryset = ringtone_queryset.filter(city=city)
+
             paginator = Paginator(ringtone_queryset, page_limit)
             ringtones = paginator.get_page(page)
             serializer = RingtoneSerializer(ringtones, many=True)

@@ -88,7 +88,7 @@ class UserSerializer(serializers.ModelSerializer):
 class RingtoneSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Ringtone
-        fields = ('id', 'ringtone_title', 'ringtone_language', 'ringtone_year', 'ringtone_file', 'ringtone_url', 'audio_type', 'is_hyped', 'state', 'city', 'created_at', 'updated_at')
+        fields = ('id', 'ringtone_title', 'ringtone_language', 'ringtone_year_start', 'ringtone_year_end', 'ringtone_file', 'ringtone_url', 'audio_type', 'is_hyped', 'state', 'city', 'created_at', 'updated_at')
 
 
 class RingtoneLanguageSerializer(serializers.ModelSerializer):
